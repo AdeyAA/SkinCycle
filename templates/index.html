@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <title>SkinCycle</title>
+  </head>
+  <body>
+    <h1>SkinCycle</h1>
+
+    <div class="container">
+      <form method="post">
+        <label for="skincare_name">Enter skincare product:</label>
+        <input type="text" name="skincare_name" required /><br />
+
+        <label for="selected_day">Select a Routine:</label>
+        <select name="selected_day">
+          <option value="Morning Routine">Morning Routine</option>
+          <option value="NightTime Routine">NightTime Routine</option></select
+        ><br />
+
+        <label for="selected_category">Select a category:</label>
+        <select name="selected_category">
+          <option value="Cleanser">Cleanser</option>
+          <option value="Toner">Toner</option>
+          <option value="Serum">Serum</option>
+          <option value="Treatment">Treatment</option>
+          <option value="Exfoliator">Exfoliator</option>
+          <option value="Moisturizer">Moisturizer</option>
+          <option value="Sunscreen">Sunscreen</option></select
+        ><br />
+
+        <button type="submit">Add To My Routine</button>
+      </form>
+
+      <button type="button" onclick="location.href='{{url_for('summary') }}'">
+        View Your Routine!
+      </button>
+    </div>
+  </body>
+</html>

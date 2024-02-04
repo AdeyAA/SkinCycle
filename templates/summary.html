@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <title>SkinCycle</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Morning Routine</h2>
+      <ul>
+        {% for record in morning_summary %}
+        <li
+          class="skincare-item"
+          data-id="{{ record.id }}"
+          data-routine="{{ record.time_of_day }}"
+        >
+          {{ record.name }} - {{ record.category }}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <h2>Night Routine</h2>
+      <ul>
+        {% for record in night_summary %}
+        <li
+          class="skincare-item"
+          data-id="{{ record.id }}"
+          data-routine="{{ record.time_of_day }}"
+        >
+          {{ record.name }} - {{ record.category }}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <button type="button" onclick="location.href='{{ url_for('main') }}'">
+        Go Back
+      </button>
+    </div>
+
+    <form
+      id="removeForm"
+      action="{{ url_for('remove_skincare') }}"
+      method="post"
+    >
+      <input type="hidden" name="id" id="removeId" value="" />
+      <input type="hidden" name="routine" id="removeRoutine" value="" />
+    </form>
+
+    <script>
+      $(document).on("mouseenter", ".skincare-item", function () {
+        $(this).append('<button class="remove-btn">Remove</button>');
+      });
+
+      $(document).on("mouseleave", ".skincare-item", function () {
+        $(this).find(".remove-btn").remove();
+      });
+
+      $(document).on("click", ".remove-btn", function () {
+        var id = $(this).parent().data("id");
+        var routine = $(this).parent().data("routine");
+
+        // Set the values in the hidden form
+        $("#removeId").val(id);
+        $("#removeRoutine").val(routine);
+
+        // Submit the form
+        $("#removeForm").submit();
+      });
+    </script>
+  </body>
+</html>
