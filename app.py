@@ -1,26 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
-from werkzeug.security import check_password_hash
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = 'your_secret_key'
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
 db = SQLAlchemy(app)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    skincare = db.relationship('Skincare', backref='user', lazy=True)
-
 
 class SkinCare(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,30 +15,7 @@ class SkinCare(db.Model):
 with app.app_context():
     db.create_all()
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('main'))
-    
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('main'))
-        else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
-    return render_template('login.html')
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
 @app.route("/", methods=["GET", "POST"])
-@login_required
 def main():
     if request.method == "POST":
         new_skincare_info = SkinCare(
